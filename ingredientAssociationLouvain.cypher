@@ -5,11 +5,11 @@ CALL gds.graph.create.cypher(
 'MATCH (n:Recipe)
 WITH COUNT(n) AS totalNoOfRecipes
 MATCH (i:Ingredient)<-[:INGREDIENT]-(r:Recipe)-[:INGREDIENT]->(j:Ingredient)
-WHERE i <> j
-WITH i, j, COUNT(DISTINCT r) AS noOfRecipes, totalNoOfRecipes
-WHERE noOfRecipes>1 AND toFloat(noOfRecipes)/toFloat(totalNoOfRecipes) > 0.0075
+WITH i, j, COUNT(r) AS noOfRecipes, totalNoOfRecipes
+WHERE noOfRecipes > 1 AND toFloat(noOfRecipes)/toFloat(totalNoOfRecipes) > 0.0075
 RETURN ID(i) AS source, ID(j) AS target, noOfRecipes AS weight'
 )
+
 //running Louvain community detection over the projected in-memory graph
 CALL gds.louvain.stream(
   'ingredient_association',
